@@ -9,11 +9,11 @@
     "email-insper": "leticiacb1@al.insper.edu.br",
     "user-github": "Leticiacb1"
   },
-  "aluno-3": {
-    "nome": "Ykaro de Sousa Andrade",
-    "email-insper": "ykarosa@al.insper.edu.br",
-    "user-github": "ykaro09andrade"
-  },
+"aluno-3": {
+  "nome": "Lister Ogusuku Ribeiro",
+  "email-insper": "listeror@al.insper.edu.br",
+  "user-github": "listerogusuku"
+},
   "aluno-4": {
     "nome": "Adney Costa Moura",
     "email-insper": "adneycm@al.insper.edu.br",
@@ -24,9 +24,9 @@
     "email-insper": "ricardomrf@al.insper.edu.br",
     "user-github": "RicardoMourao-py"
   },
-  "aluno-6": {
-    "nome": "Lister Ogusuku Ribeiro",
-    "email-insper": "listeror@al.insper.edu.br",
-    "user-github": "listerogusuku"
-  }
+    "aluno-6": {
+      "nome": "Ykaro de Sousa Andrade",
+      "email-insper": "ykarosa@al.insper.edu.br",
+      "user-github": "ykaro09andrade"
+    }
 }
