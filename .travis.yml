@@ -8,7 +8,8 @@
 # com a contrapartida de levar mais tempo no boot
 # ref : https://docs.travis-ci.com/user/reference/overview/
 sudo: enabled
-dist: trusty
+dist: focal
+arch: amd64
 
 language: java
 jdk:
@@ -18,20 +19,21 @@ jdk:
 language: python
 python:
   - '3.6'
+  
+before_install:
+   - sudo apt-get -qq update  
+  
 # command to install dependencies
 install:
-  - pip install -r requirements.txt
-  
-before_script:
-# garante que o travis pare no primeiro erro
-#  - set -e
-# dependencias modelsim 
+  - pip3 install -r requirements.txt
   - sudo dpkg --add-architecture i386
   - sudo apt-get update
   - sudo apt-get install build-essential
-  - sudo apt-get install gcc-multilib g++-multilib lib32z1 lib32stdc++6 lib32gcc1 expat:i386 fontconfig:i386 libfreetype6:i386 libexpat1:i386 libc6:i386 libgtk-3-0:i386 libcanberra0:i386 libpng12-0:i386 libice6:i386 libsm6:i386 libncurses5:i386 zlib1g:i386 libx11-6:i386 libxau6:i386 libxdmcp6:i386 libxext6:i386 libxft2:i386 libxrender1:i386 libxt6:i386 libxtst6:i386
+  - sudo apt-get install gcc make libxft2:i386 libxext6:i386 libncurses5:i386 libstdc++6:i386 libpng-dev libpng16-16:i386 libpng16-16 python-gobject libnotify-bin 
+  
+before_script:
 # modelSim download
-  - wget http://download.altera.com/akdlm/software/acdsinst/17.1std/590/ib_installers/ModelSimSetup-17.1.0.590-linux.run -O modelsim.run
+  - wget https://download.altera.com/akdlm/software/acdsinst/20.1std.1/720/ib_installers/ModelSimSetup-20.1.1.720-linux.run -O modelsim.run
 # modelsim install
   - chmod +x modelsim.run
   - ./modelsim.run --mode unattended --accept_eula 1 --installdir $HOME
