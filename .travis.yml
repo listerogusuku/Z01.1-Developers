@@ -52,3 +52,4 @@ script:
 
   ## run scripts
   - python3 Projetos/A-AmbienteDesenvolvimento/testeAmbienteDesenvolvimento.py
+  - python3 Projetos/B-LogicaCombinacional/testeLogicaCombinacional.py 
