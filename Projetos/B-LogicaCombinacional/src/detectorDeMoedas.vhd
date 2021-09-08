@@ -11,4 +11,10 @@ architecture arch of detectorDeMoedas is
 
 begin
 
+    cents(0)<= Q or N;
+    cents(1)<= D;
+    cents(2)<= N;
+    cents(3)<= Q or D;
+    cents(4)<= Q;
+
 end architecture;
