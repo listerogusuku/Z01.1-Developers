@@ -27,9 +27,9 @@ BarrelShifter16.vhd
 circuito.vhd
 detectorDeMoedas.vhd
 #impressora.vhd
-#sevenSeg.vhd
+sevenSeg.vhd
 
 ##### conceito A e B
 
-#ConceitoB.vhd
+ConceitoB.vhd
 #ConceitoA.vhd
