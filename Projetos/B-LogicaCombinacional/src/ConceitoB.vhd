@@ -26,13 +26,40 @@ end entity;
 architecture rtl of ConceitoB is
 
 --------------
--- signals
+-- component
 --------------
+component sevenSeg is
+	port (
+	   bcd : in  std_logic_vector(3 downto 0);
+	   leds : out std_logic_vector(6 downto 0)
+	);
+
+end component;
 
 ---------------
 -- implementacao
 ---------------
 begin
 
+	seven2 : sevenSeg
+	port map 
+	(
+			bcd => SW(3 downto 0),
+			leds => HEX2
+	);
+
+	seven1 : sevenSeg
+	port map 
+	(
+			bcd => SW(7 downto 4),
+			leds => HEX1
+	);
+
+	seven0 : sevenSeg
+	port map 
+	(
+			bcd => "00" & SW(9 downto 8),
+			leds => HEX0
+	);
 
 end rtl;
