@@ -29,6 +29,7 @@ architecture rtl of ConceitoA is
 -- signals
 --------------
 
+
 signal bcd_0 : std_logic_vector(3 downto 0);
 signal bcd_1 : std_logic_vector(3 downto 0);
 signal bcd_2 : std_logic_vector(3 downto 0);

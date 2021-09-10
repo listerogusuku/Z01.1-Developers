@@ -32,3 +32,4 @@ sevenSeg.vhd
 ConceitoB.vhd
 #ConceitoA.vhd
 
+

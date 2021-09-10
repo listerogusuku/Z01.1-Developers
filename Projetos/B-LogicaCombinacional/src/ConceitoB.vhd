@@ -36,6 +36,10 @@ component sevenSeg is
 
 end component;
 
+-- signals
+--------------
+
+
 ---------------
 -- implementacao
 ---------------

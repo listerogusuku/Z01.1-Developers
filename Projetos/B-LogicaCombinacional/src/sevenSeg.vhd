@@ -28,4 +28,5 @@ leds <= "0000001" when bcd = "0000" else -- numero 0
 	"0111000" when bcd ="1111" else -- digito F (15)
 	"1111111";                      --Leds desligados.
 
+
 end architecture;
