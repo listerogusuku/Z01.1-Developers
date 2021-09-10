@@ -11,4 +11,6 @@ architecture arch of circuito is
 
 begin
 
+X <= (A and B and not(C));
+
 end architecture;

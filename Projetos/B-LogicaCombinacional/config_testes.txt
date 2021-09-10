@@ -26,10 +26,8 @@ Mux8Way16.vhd
 BarrelShifter16.vhd
 circuito.vhd
 detectorDeMoedas.vhd
-#impressora.vhd
+impressora.vhd
 sevenSeg.vhd
-
 ##### conceito A e B
-
 ConceitoB.vhd
-#ConceitoA.vhd
+ConceitoA.vhd
