@@ -55,8 +55,8 @@ if __name__ == "__main__":
     print("===================================================")
     r = report(tstLogiComb.log, 'B', 'HW')
 
-    print("Reporting test result to server")
-    noti.hw(r)
-    r.send()
-    sys.exit(r.error)
-    print("===================================================")
+    #print("Reporting test result to server")
+    #noti.hw(r)
+    #r.send()
+    #sys.exit(r.error)
+    #print("===================================================")

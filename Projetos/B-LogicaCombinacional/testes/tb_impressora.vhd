@@ -44,13 +44,13 @@ begin
   begin
     test_runner_setup(runner, runner_cfg);
 
-    sw1 <= '0'; sw2 <= '0'; sw3 <= '0'; sw4 <= '0';
+    sw1 <= '0'; sw2 <= '0'; sw3 <= '0'; sw4 <= '1';
     wait until clk='1' ;
-    assert(x = '0')  report "0" severity error;
+    assert(x = '1')  report "0" severity error;
 
     sw1 <= '1'; sw2 <= '0'; sw3 <= '0'; sw4 <= '1';
     wait until clk='1' ;
-    assert(x = '0')  report "0" severity error;
+    assert(x = '1')  report "0" severity error;
 
     sw1 <= '1'; sw2 <= '1'; sw3 <= '0'; sw4 <= '0';
     wait until clk='1' ;
@@ -58,23 +58,23 @@ begin
 
     sw1 <= '0'; sw2 <= '1'; sw3 <= '0'; sw4 <= '0';
     wait until clk='1' ;
-    assert(x = '0')  report "0" severity error;
-
-    sw1 <= '0'; sw2 <= '1'; sw3 <= '1'; sw4 <= '0';
-    wait until clk='1' ;
     assert(x = '1')  report "0" severity error;
+
+    sw1 <= '0'; sw2 <= '1'; sw3 <= '1'; sw4 <= '1';
+    wait until clk='1' ;
+    assert(x = '0')  report "0" severity error;
 
     sw1 <= '0'; sw2 <= '0'; sw3 <= '1'; sw4 <= '0';
     wait until clk='1' ;
+    assert(x = '1')  report "0" severity error;
+
+    sw1 <= '1'; sw2 <= '1'; sw3 <= '1'; sw4 <= '1';
+    wait until clk='1' ;
     assert(x = '0')  report "0" severity error;
 
-    sw1 <= '0'; sw2 <= '0'; sw3 <= '1'; sw4 <= '1';
-    wait until clk='1' ;
-    assert(x = '1')  report "0" severity error;
-
 
     wait until clk='1' ;
-    assert(x = '1')  report "0" severity error;
+    assert(x = '0')  report "0" severity error;
 
 
 

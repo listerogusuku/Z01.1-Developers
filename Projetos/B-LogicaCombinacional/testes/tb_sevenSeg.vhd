@@ -47,15 +47,15 @@ begin
 
     bcd <= "0000";
     wait until clk='1' ;
-    assert(leds = "0000001")  report "Falha em BCD=0" severity error;
+    assert(leds = "1000000")  report "Falha em BCD=0" severity error;
 
     bcd <= "0011";
     wait until clk='1' ;
-    assert(leds = "0000110")  report "Falha em BCD=3" severity error;
+    assert(leds = "0110000")  report "Falha em BCD=3" severity error;
 
     bcd <= "0111";
     wait until clk='1' ;
-    assert(leds = "0001111")  report "Falha em BCD=7" severity error;
+    assert(leds = "1111000")  report "Falha em BCD=7" severity error;
 
     test_runner_cleanup(runner); -- Simulacao acaba aqui
 

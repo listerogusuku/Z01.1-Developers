@@ -60,7 +60,7 @@ if __name__ == "__main__":
     # notificacao / log do teste
     noti.hw(r)
 
-    print("Reporting test result to server")
-    r.send()
-    sys.exit(r.error)
-    print("===================================================")
+    #print("Reporting test result to server")
+    #r.send()
+    #sys.exit(r.error)
+    #print("===================================================")
