@@ -49,7 +49,7 @@ begin
 	port map 
 	(
 			bcd => SW(3 downto 0),
-			leds => HEX2
+			leds => HEX0
 	);
 
 	seven1 : sevenSeg
@@ -63,7 +63,7 @@ begin
 	port map 
 	(
 			bcd => "00" & SW(9 downto 8),
-			leds => HEX0
+			leds => HEX2
 	);
 
 end rtl;
