@@ -8,5 +8,4 @@
 # comparador16.vhd
 # inversor16.vhd
 zerador16.vhd
-# ALU.vhd
-  
+
