@@ -95,7 +95,82 @@ architecture  rtl OF alu is
 
    SIGNAL zxout,zyout,nxout,nyout,andout,adderout,muxout,precomp: std_logic_vector(15 downto 0);
 
+    signal x_Zerador : STD_LOGIC_VECTOR(15 downto 0);
+	signal y_Zerador : STD_LOGIC_VECTOR(15 downto 0);
+	signal x_Inversor : STD_LOGIC_VECTOR(15 downto 0);
+	signal y_Inversor : STD_LOGIC_VECTOR(15 downto 0);
+	signal operacao : STD_LOGIC_VECTOR(15 downto 0);
+	signal saidaADD: STD_LOGIC_VECTOR(15 downto 0);
+	signal saidaAND: STD_LOGIC_VECTOR(15 downto 0);
+
+
 begin
   -- Implementação vem aqui!
+
+  -- Zerador x:	
+	zeradorX: zerador16 port map (
+		z => zx,
+		a => x,
+		y => x_Zerador
+	);
+
+	-- Zerador y:	
+	zeradorY: zerador16 port map (
+		z => zy,
+		a => y,
+		y => y_Zerador
+	);
+	
+	-- Inversorsor X
+	inversorX: inversor16 port map (
+		z  => nx,
+		a  => x_Zerador,
+		y  => x_Inversor 
+	);
+
+	--Inversor Y
+	inversorY: inversor16 port map (
+		z  => ny,
+		a  => y_Zerador,
+		y  => y_Inversor 
+	);
+
+	-- And
+	andPort: And16 port map (
+		a =>  x_Inversor,
+		b =>  y_Inversor,
+		q => saidaAND
+	);
+
+	-- Add
+
+	addPort: Add16 port map (
+		a =>  x_Inversor,
+		b =>  y_Inversor,
+		q => saidaADD
+	);
+
+	-- Multiplexador:
+
+	mux: Mux16 port map (
+		a =>   saidaAND,
+		b =>   saidaADD,
+		sel => f, 
+		q => operacao 
+	);
+
+	--Inversor/ Saída:
+	inversor: inversor16 port map(
+		z  => no,
+		a  => operacao,                       
+		y  => saida 
+	);
+
+	-- Comparador:
+	comparador: comparador16 port map(
+		a   => saida,
+		zr  =>  zr,
+		ng  => ng
+	);
 
 end architecture;
