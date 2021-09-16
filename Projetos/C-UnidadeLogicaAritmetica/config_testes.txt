@@ -1,3 +1,4 @@
+
 # Testes a serem executados
 # Descomente os módulos que deseja testar
 
@@ -7,6 +8,5 @@ HalfAdder.vhd
 # Inc16.vhd
 comparador16.vhd
 inversor16.vhd
-# zerador16.vhd
+zerador16.vhd
 # ALU.vhd
-  
