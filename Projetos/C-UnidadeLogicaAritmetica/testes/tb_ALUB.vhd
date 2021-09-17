@@ -15,7 +15,7 @@ end entity;
 
 architecture tb of tb_ALU is
 
-component ALUB is
+component ALU_AB is
 	port (
 			x,y:   in STD_LOGIC_VECTOR(15 downto 0); -- entradas de dados da ALU
 			zx:    in STD_LOGIC;                     -- zera a entrada x
@@ -24,6 +24,8 @@ component ALUB is
 			ny:    in STD_LOGIC;                     -- inverte a entrada y
 			f1:     in STD_LOGIC;                     -- se 0 calcula x & y, senão x + y
       f2:     in STD_LOGIC;  
+      s:     in STD_LOGIC;  					 -- shifter /left/right/
+			ss:    in  std_logic_vector(2 downto 0); -- shift amount
       no:    in STD_LOGIC;                     -- inverte o valor da saída
 			zr:    out STD_LOGIC;                    -- setado se saída igual a zero
 			ng:    out STD_LOGIC;                    -- setado se saída é negativa
@@ -33,12 +35,14 @@ component ALUB is
 end component;
 
    signal  inX, inY : STD_LOGIC_VECTOR(15 downto 0);
-   signal  inZX, inNX, inZY, inNY, inF1, inF2, inNO, outZR, outNG, Cout: STD_LOGIC; --Adicionando Carry
+   signal  inZX, inNX, inZY, inNY, inF1, inF2, inNO, outZR, outNG, Cout,inS: STD_LOGIC; --Adicionando Carry
+   signal  inSS : STD_LOGIC_VECTOR(2 downto 0);
    signal  outSaida : STD_LOGIC_VECTOR(15 downto 0);
+
 
 begin
 
-	mapping: ALUB port map(
+	mapping: ALU_AB port map(
     x  => inX,
     y  => inY,
     zx => inZx,
@@ -47,6 +51,8 @@ begin
     ny => inNy,
     f1  => inF1,
     f2  => inF2,
+    s  => inS,
+    ss  => inSS,
     no => inNo,
     zr => outZr,
     ng => outNg,
@@ -198,6 +204,32 @@ begin
       wait for 200 ps;
       assert(outZR = '1' and outNG = '0' and outSaida= "0000000000000000" and Cout='0')  report "Falha em teste: 23" severity error;
 
+       --Teste: 24 -Shifta pra direita 6 unidades
+       inX <= "0000000000000000"; inY <= "1111111111111111";
+       inZX <= '0'; inNX <= '0'; inZY <= '0'; inNY <= '0'; inF1 <= '1'; inF2<='0'; inNO <= '0' ;inS <= '1'; inSS <= "111";
+       wait for 200 ps;
+       assert(outZR = '0' and outNG = '0' and outSaida= "0000000111111111" and Cout = '0') report "Falha em teste: 24" severity error;
+
+       -- Teste: 25 -Shifta pra direita 5 unidades
+       inX <= "0000000000000000"; inY <= "1111111111111111";
+       inZX <= '1'; inNX <= '1'; inZY <= '1'; inNY <= '0'; inF1 <= '1'; inF2<='0'; inNO <= '0';inS<= '1'; inSS <= "101";
+       wait for 200 ps;
+       assert(outZR = '0' and outNG = '0' and outSaida= "0000011111111111" and Cout= '0') report "Falha em teste: 25" severity error;
+
+      
+       -- Teste: 26 -Shifta pra esquerda uma unidade
+       inX <= "0000000000000000"; inY <= "1111111111111111";
+       inZX <= '0'; inNX <= '1'; inZY <= '1'; inNY <= '1'; inF1 <= '1'; inF2<= '0'; inNO <= '1'; inS <= '0'; inSS <= "001"; 
+       wait for 200 ps;
+       assert(outZR = '0' and outNG = '0' and outSaida= "0000000000000010" and Cout= '1')  report "Falha em teste: 26" severity error;
+       
+ 
+       -- Teste: 27 -Shifa  pta esquerda 5  unidades
+       inX <= "0000000000000000"; inY <= "1111111111111111";
+       inZX <= '0'; inNX <= '1'; inZY <= '0'; inNY <= '0'; inF1 <= '1'; inF2<='0'; inNO <= '1'; inS <= '0'; inSS<= "101";
+       wait for 200 ps;
+       assert(outZR = '0' and outNG = '0' and outSaida= "0000000000100000" and Cout = '1')  report "Falha em teste: 27" severity error;
+       
 
     test_runner_cleanup(runner); -- Simulacao acaba aqui
 

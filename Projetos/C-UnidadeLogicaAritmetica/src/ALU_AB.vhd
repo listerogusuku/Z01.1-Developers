@@ -26,7 +26,7 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
-entity ALUB is
+entity ALU_AB is
 	port (
 			x,y:   in STD_LOGIC_VECTOR(15 downto 0); -- entradas de dados da ALU
 			zx:    in STD_LOGIC;                     -- zera a entrada x
@@ -35,6 +35,8 @@ entity ALUB is
 			ny:    in STD_LOGIC;                     -- inverte a entrada y
 			f1:    in STD_LOGIC;                     -- se 0 calcula x & y, senão x + y
 			f2:	   in STD_LOGIC;                     -- retorna o resultado o mux1 (caso 0) ou retorna X xor Y;
+			s:     in STD_LOGIC;  					 -- shifter /left/right/
+			ss:    in  std_logic_vector(2 downto 0); -- shift amount
 			no:    in STD_LOGIC;                     -- inverte o valor da saída
 			zr:    out STD_LOGIC;                    -- setado se saída igual a zero
 			ng:    out STD_LOGIC;                    -- setado se saída é negativa
@@ -43,7 +45,7 @@ entity ALUB is
 	);
 end entity;
 
-architecture  rtl OF alub is
+architecture  rtl OF ALU_AB is
   -- Aqui declaramos sinais (fios auxiliares)
   -- e componentes (outros módulos) que serao
   -- utilizados nesse modulo.
@@ -56,7 +58,19 @@ architecture  rtl OF alub is
 	signal operacaoMux2 : STD_LOGIC_VECTOR(15 downto 0);
 	signal saidaADD: STD_LOGIC_VECTOR(15 downto 0);
 	signal saidaAND: STD_LOGIC_VECTOR(15 downto 0);
-	signal carry: STD_LOGIC_VECTOR(15 downto 0);                                                        -- Adicionando Carry
+	signal carry: STD_LOGIC_VECTOR(15 downto 0);   
+	signal entrada_shifter: STD_LOGIC_VECTOR(15 downto 0);  
+	signal saida_shifter: STD_LOGIC_VECTOR(15 downto 0);   
+	signal size1: STD_LOGIC_VECTOR(2 downto 0); 
+	
+	component BarrelShifter16 IS
+		port(
+			a:    in  STD_LOGIC_VECTOR(15 downto 0);   -- input vector
+			dir:  in  std_logic;                       -- 0=>left 1=>right
+			size: in  std_logic_vector(2 downto 0);    -- shift amount
+			q:    out STD_LOGIC_VECTOR(15 downto 0)  -- output vector (shifted)
+			);
+	end component;-- Adicionando Carry
 
 	component zerador16 IS
 		port(z   : in STD_LOGIC;
@@ -155,7 +169,6 @@ begin
 		carry_out =>  carry                                                        -- Adicionando Carry
 	);
 
-
 	-- Multiplexador:
 
 	mux1: Mux16 port map (
@@ -176,12 +189,12 @@ begin
 	inversor: inversor16 port map(
 		z  => no,
 		a  => operacaoMux2,                       
-		y  => saida 
+		y  => precomp 
 	);
 
-	-- Comparador:
+	-- Comparador: Troca saida para o shifter
 	comparador: comparador16 port map(
-		a   => saida,
+		a   => saida_shifter,
 		zr  =>  zr,
 		ng  => ng
 	);
@@ -189,6 +202,11 @@ begin
 	-- Adicionando Carry:
 	estouro <= '1' when (f1='1' AND f2='0' AND carry(15)='1') else
 			   '0';
+
+	Shifter : BarrelShifter16 port map (precomp,s,ss,saida_shifter);	   
+
+	-- retoma saída normal
+	saida <= saida_shifter;
 
 end architecture;
 
