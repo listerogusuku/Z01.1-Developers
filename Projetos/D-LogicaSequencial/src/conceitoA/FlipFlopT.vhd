@@ -13,8 +13,24 @@ entity FlipFlopT is
 	);
 end entity;
 
+--referencia: https://www.youtube.com/watch?v=AF5ZfWT-QCU&ab_channel=AllElectronics
+
 architecture arch of FlipFlopT is
+
+signal saida_q: STD_LOGIC:= '0';
+signal saida_notq: STD_LOGIC:= '1';
 
 begin
 
+	process(clock) begin
+		if (t='1') then
+			if (rising_edge(clock)) then
+				saida_q <= not saida_q;
+				saida_notq <= not saida_notq;
+			end if;
+		end if;
+	  
+		end process;
+q <= saida_q;
+notq <= saida_notq;
 end architecture;
