@@ -36,7 +36,22 @@ begin
     test_runner_setup(runner, runner_cfg);
 
     -- IMPLEMENTE AQUI!
+
+    t <='0'; --t com entrada falsa, clock ativado , saidas esperadas como inalteradas
     wait until clk'event and clk='0';
+    assert(q='0' and notq='1')  report "Falha em teste: Saídas não inalteradas" severity error;
+
+    t <='0'; --t com entrada falsa, clock não ativado , saidas esperadas como inalteradas
+    wait until clk'event and clk='0';
+    assert(q='0' and notq='1')  report "Falha em teste: Saídas não inalteradas" severity error;
+
+    t <='1'; --t com entrada falsa, clock ativado , saidas esperadas como invertidas
+    wait until clk'event and clk='0';
+    assert(q='1' and notq='0')  report "Falha em teste: Saídas não inalteradas" severity error;
+
+    t <='1'; --t com entrada falsa, clock não ativado , saidas esperadas como inalteradas
+    wait until clk'event and clk='0';
+    assert(q='0' and notq='1')  report "Falha em teste: Saídas não invertidas" severity error;
 
     -- finish
     wait until clk'event and clk='0';
