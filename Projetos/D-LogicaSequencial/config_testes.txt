@@ -8,9 +8,9 @@ FlipFlopD.vhd
 #Register16.vhd
 #Register32.vhd
 #Register64.vhd
-#Ram8.vhd
-#Ram64.vhd
-#Ram512.vhd
+# Ram8.vhd
+# Ram64.vhd
+# Ram512.vhd
 #Ram4K.vhd
 
 ########
