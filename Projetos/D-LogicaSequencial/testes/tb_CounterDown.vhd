@@ -33,11 +33,21 @@ begin
   begin
     test_runner_setup(runner, runner_cfg);
 
-    -- IMPLEMENTE AQUI!
-    wait until clk'event and clk='0';
-		assert(Q = "111")  report "Precisa fazer os testes" severity error;
+    -- -- IMPLEMENTE AQUI!
 
+    --vetor q já começa com '000', assim a cada ciclo do relogio basta conferir a alternancia da contagem
+     wait until clk'event and clk='0';
+     assert(q = "111")  report "Teste 0: Esperava-se 111" severity error;
+ 
+     wait until clk'event and clk='0';
+     assert(q = "110")  report "Teste 1: Esperava-se 110" severity error;
 
+     wait until clk'event and clk='0';
+     assert(q = "101")  report "Teste 2: Esperava-se 101" severity error;
+ 
+     wait until clk'event and clk='0';
+     assert(q = "100")  report "Teste 3: Esperava-se 100" severity error;
+ 
     -- finish
     wait until clk'event and clk='0';
     test_runner_cleanup(runner); -- Simulation ends here
