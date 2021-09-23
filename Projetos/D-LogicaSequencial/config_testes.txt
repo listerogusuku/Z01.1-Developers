@@ -13,10 +13,10 @@ Register32.vhd
 #Ram512.vhd
 #Ram4K.vhd
 
-########
 # Rubrica A
-#
 FlipFlopT.vhd
 FlipFlopJK.vhd
 CounterDown.vhd
+
+
  
