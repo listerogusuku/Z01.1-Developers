@@ -14,7 +14,6 @@ Ram8.vhd
 #Ram4K.vhdS
 
 # Rubrica A
-
 FlipFlopT.vhd
 FlipFlopJK.vhd
 CounterDown.vhd
