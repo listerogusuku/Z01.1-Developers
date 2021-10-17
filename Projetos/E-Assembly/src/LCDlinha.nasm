@@ -5,5 +5,5 @@
 ;
 ; Desenhe uma linha no LCD
 
-leaw $16384, %A
+leaw $18384, %A
 movw $-1, (%A)
