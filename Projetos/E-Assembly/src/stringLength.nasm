@@ -27,3 +27,31 @@
 ;  RAM[15] = NULL = 0x0000
 
 
+leaw $8, %A    ; A recebe o endereço de memória 8
+movw %A, %D    ; D = 8
+leaw $0, %A    ; A recebe o endereço de memória 0
+movw %D, (%A)  ; RAM[0]=8
+
+LOOP: 
+    leaw $0, %A ; A recebe o endereço de memória 0
+    movw (%A), %A ; A = RAM[0]
+    movw (%A), %D ; D = RAM[RAM[0]]
+    leaw $END, %A ; A recebe END
+    je %D ; salta para END, quando D= 0
+    nop ; não faz nada
+    leaw $0, %A ; A recebe o endereço de memória 0 
+    movw (%A), %D ; D=RAM[0]
+    addw $1, %D, (%A) ; RAM[0]=RAM[0]+1
+    leaw $LOOP, %A 
+    jmp
+    nop
+
+END:
+leaw $0, %A ; A recebe o endereço de memória 0
+movw (%A), %D ; D=RAM[0]
+leaw $8, %A ; A recebe o endereço de memória 0
+subw %D, %A, %D ; D=RAM[0]-8
+leaw $0, %A ; A recebe o endereço de memória 0
+movw %D, (%A) ; RAM[0]= RAM[0]-8
+
+
