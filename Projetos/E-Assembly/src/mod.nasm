@@ -10,3 +10,39 @@
 ; 4  % 3 = 1
 ; 10 % 7 = 3
 ; ------------------------------------------------------------
+
+; Vamos achar o resto da divisão fazendo subtrações sucessivas
+; até acharmos um valor igual ou menor que zero.
+
+leaw $2, %A
+movw $0, (%A)
+
+LOOP:
+
+    leaw $0, %A
+    movw (%A), %D
+
+    leaw $4, %A
+    movw %D, (%A)
+
+    leaw $1, %A
+    subw %D, (%A), %D
+
+    leaw $0, %A
+    movw %D, (%A)
+
+leaw $SAIDA, %A
+jl %D
+nop
+
+leaw $LOOP, %A
+jmp
+nop
+
+SAIDA:
+    leaw $4, %A
+    movw (%A), %D
+
+    leaw $2, %A
+    movw %D, (%A)
+
