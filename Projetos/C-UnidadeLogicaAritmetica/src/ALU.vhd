@@ -163,14 +163,16 @@ begin
 	inversor: inversor16 port map(
 		z  => no,
 		a  => operacao,                       
-		y  => saida 
+		y  => precomp 
 	);
 
 	-- Comparador:
 	comparador: comparador16 port map(
-		a   => saida,
+		a   => precomp,
 		zr  =>  zr,
 		ng  => ng
 	);
+
+	saida <= precomp;
 
 end architecture;

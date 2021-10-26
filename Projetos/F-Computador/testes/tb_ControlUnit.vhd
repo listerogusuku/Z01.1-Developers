@@ -133,14 +133,14 @@ begin
     -- Zero na saida da ALU gravando
     ----------------------------------------------
     -- mov 0 -> D
-    instruction <= "10" & "000" & "101010" & "0010" & "000";
+    instruction <= "11" & "000" & "101010" & "0010" & "000"; --modifica pro A (bit16)
     wait until clk = '1';
     assert(loadA  = '0' and loadD  = '1' and  loadM  = '0' and  loadPC = '0' and
            zx = '1' and nx = '0' and zy = '1' and ny = '0' and f = '1' and no = '0')
       report " **Falha** mov %0, %D " severity error;
 
        -- mov (%A) -> D
-    instruction <= "10" & "010" & "110000" & "0010" & "000";
+    instruction <= "11" & "010" & "110000" & "0010" & "000"; --modifica pro A (bit16)
     wait until clk = '1';
     assert(loadA  = '0' and loadD  = '1' and  loadM  = '0' and  loadPC = '0' and
            zx = '1' and nx = '1' and zy = '0' and ny = '0' and f = '0' and no = '0')
@@ -156,19 +156,19 @@ begin
     -----------------------------------------------
     -- ULA mem
     ----------------------------------------------
-    -- add %S, %A -> %D
-    instruction <= "10" & "001" & "000010" & "0010" & "000";
+    -- add %D, %A -> %D
+    instruction <= "11" & "001" & "000010" & "0010" & "000";--modifica pro A (bit16)
     wait until clk = '1';
     assert(loadA  = '0' and loadD  = '1' and  loadM  = '0' and  loadPC = '0' and
            zx = '0' and nx = '0' and zy = '0' and ny = '0' and f = '1' and no = '0')
-      report " **Falha** add %S, %A, %D " severity error;
+      report " **Falha** add %D, %A, %D " severity error;
 
     -- subw %D, (%A) -> %D
-    instruction <= "10" & "001" & "010011" & "0010" & "000";
+    instruction <= "11" & "001" & "010011" & "0010" & "000";--modifica pro A (bit16)
     wait until clk = '1';
     assert(loadA  = '0' and loadD  = '1' and  loadM  = '0' and  loadPC = '0' and
            zx = '0' and nx = '1' and zy = '0' and ny = '0' and f = '1' and no = '1')
-      report " **Falha** subw %S, %D " severity error;
+      report " **Falha** subw %D, %D " severity error;
 
     -----------------------------------------------
     -- JMP
@@ -251,6 +251,36 @@ begin
     assert(loadA  = '0' and loadD  = '0' and  loadM  = '0' and loadS = '1' and  loadPC = '0' and
            zx = '1' and nx = '1' and zy = '0' and ny = '0' and f = '0' and no = '0')
       report " **Falha** mov (%A), %S " severity error;
+
+    -- addw %S, %A -> %S:
+    instruction <= "10" & "010" & "000010" & "1000" & "000";
+    wait until clk = '1';
+    assert(loadA  = '0' and loadD  = '0' and  loadM  = '0' and  loadS = '1' and loadPC = '0' and muxS='0' and
+           zx = '0' and nx = '0' and zy = '0' and ny = '0' and f = '1' and no = '0')
+      report " **Falha** soma %S, %A, %S " severity error;
+
+  -- subw %S, (%A) -> %D
+    instruction <= "11" & "001" & "010011" & "1010" & "000";
+    wait until clk = '1';
+    assert(loadA  = '0' and loadD  = '1' and  loadM  = '0' and  loadPC = '0' and muxS='1' and
+           zx = '0' and nx = '1' and zy = '0' and ny = '0' and f = '1' and no = '1')
+      report " **Falha** subw %S, %A, %D" severity error;
+
+ ----------------------------------------------
+  -- Conceito A
+  ----------------------------------------------
+
+   -- Teste: D instruction
+    instruction <= "01" & "0111111111111111";
+    wait until clk = '1';
+		assert( loadA ='0' and loadD = '1' and loadM = '0' and loadPC = '0' and muxALUI_A = '1')
+      report "Falha em leaw 0xFFFF, %D" severity error;
+
+    ---leaw %1, %D
+    instruction <= "01" & "0000000000000001";
+    wait until clk = '1';
+		assert(loadA= '0' and loadD = '1' and muxS = '1' and loadM = '0' and loadPC = '0' and muxALUI_A = '1')
+     report "Falha em leaw 5, %D" severity error;
 
   test_runner_cleanup(runner); -- Simulation ends here
 

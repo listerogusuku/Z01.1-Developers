@@ -73,7 +73,6 @@ architecture arch of CPU is
       muxAM                       : out STD_LOGIC;
       zx, nx, zy, ny, f, no       : out STD_LOGIC;
       loadA, loadD, loadM, loadPC : out STD_LOGIC;
-
       loadS: out STD_LOGIC;           -- Conceito B
       muxS: out STD_LOGIC
       );
@@ -98,15 +97,18 @@ architecture arch of CPU is
   signal s_regAout: STD_LOGIC_VECTOR(15 downto 0);
   signal s_regDout: STD_LOGIC_VECTOR(15 downto 0);
 
+  signal s_ALUout: STD_LOGIC_VECTOR(15 downto 0);
+  signal s_pcout: STD_LOGIC_VECTOR(15 downto 0);
   -- Conceito B:
   signal c_muxS: STD_LOGIC;
   signal c_loadS: STD_LOGIC;
   signal s_regSout:STD_LOGIC_VECTOR(15 downto 0);
   -----
-  
-  signal s_ALUout: STD_LOGIC_VECTOR(15 downto 0);
 
-  signal s_pcout: STD_LOGIC_VECTOR(15 downto 0);
+  -- Conceito A:
+    signal s_muxS_out: STD_LOGIC_VECTOR(15 downto 0);
+  --
+
 
 begin
 
@@ -144,7 +146,7 @@ regA: Register16 port map(
 
 regD: Register16 port map (
   clock => clock,
-  input => s_ALUout,
+  input => s_muxALUI_Aout,
   load => c_loadD,
   output => s_regDout
 );
@@ -180,7 +182,7 @@ jPC: pc port map(
   output => s_pcout
 );
 
--- Conceito B --
+-- Conceito B, co modificações pro A --
 
 -- RegistradorS:
 regS: Register16 port map (
@@ -194,12 +196,12 @@ muxS:  Mux16 port map(
   a=> s_regDout,
   b=> s_regSout,
   sel=> c_muxS,
-  q=> s_regSout
+  q=> s_muxS_out
 );
 
 --ULAB:
 opULAB: ALU port map(
-  x=> s_regSout,
+  x=> s_muxS_out,
   y=> s_muxAM_out,
   zx=> c_zx, nx=> c_nx, zy=> c_zy, ny=> c_ny, f=> c_f, no=> c_no,
   zr=> c_zr,

@@ -34,9 +34,9 @@ architecture arch of ControlUnit is
 
 begin
 
-  loadD<= instruction(4) and instruction(17);
+  loadD<= (instruction(4) and instruction(17)) or instruction(16);
   loadM<= instruction(5) and instruction(17);
-  loadA<= instruction(3) or not instruction(17); -- Pode ser uma operação de escrita ou leitura.
+  loadA<=  (instruction(17) and instruction(3)) or (not instruction(17) and not instruction(16));-- Pode ser uma operação de escrita ou leitura.
 
   muxAM<= instruction(13) and instruction(17);     -- Mux para carregar inM ou %A
   muxALUI_A<= not(instruction(17));                -- Tipo de instrução
@@ -60,7 +60,8 @@ begin
            '0';
 
   -- Impĺementando conceito B:
+    --Pequenas modificações pro A:
   loadS <= instruction(6) and instruction(17);  --Atribuindo a bit vazio;
-  muxS <= instruction(15) and instruction(17);  -- VER
+  muxS <= (instruction(15) and instruction(17)) or  instruction(16);  -- VER --modificado pro A
 
 end architecture;
