@@ -72,7 +72,10 @@ architecture arch of CPU is
       muxALUI_A                   : out STD_LOGIC;
       muxAM                       : out STD_LOGIC;
       zx, nx, zy, ny, f, no       : out STD_LOGIC;
-      loadA, loadD, loadM, loadPC : out STD_LOGIC
+      loadA, loadD, loadM, loadPC : out STD_LOGIC;
+
+      loadS: out STD_LOGIC;           -- Conceito B
+      muxS: out STD_LOGIC
       );
   end component;
 
@@ -94,10 +97,122 @@ architecture arch of CPU is
   signal s_muxAM_out: STD_LOGIC_VECTOR(15 downto 0);
   signal s_regAout: STD_LOGIC_VECTOR(15 downto 0);
   signal s_regDout: STD_LOGIC_VECTOR(15 downto 0);
+
+  -- Conceito B:
+  signal c_muxS: STD_LOGIC;
+  signal c_loadS: STD_LOGIC;
+  signal s_regSout:STD_LOGIC_VECTOR(15 downto 0);
+  -----
+  
   signal s_ALUout: STD_LOGIC_VECTOR(15 downto 0);
 
   signal s_pcout: STD_LOGIC_VECTOR(15 downto 0);
 
 begin
+
+  -- Control Unit
+
+control: ControlUnit port map(
+  instruction=> instruction,
+  zr => c_zr,ng => c_ng,
+  muxALUI_A =>  c_muxALUI_A, muxAM => c_muxAM,
+  zx=> c_zx, nx=> c_nx, zy=> c_zy, ny=> c_ny, f=> c_f, no=> c_no,       
+  loadA=> c_loadA, loadD=> c_loadD, loadM=> writeM, loadPC=> c_loadPC,
+  loadS=> c_loadS, muxS=> c_muxS   --Conceito B  
+
+);
+
+-- mux ALU/I
+
+muxALUI: Mux16 port map (
+  a=> s_ALUout,
+  b=> instruction(15 downto 0),
+  sel=> c_muxALUI_A,
+  q=> s_muxALUI_Aout
+);
+
+-- Register A:
+
+regA: Register16 port map(
+  clock => clock,
+  input => s_muxALUI_Aout,
+  load => c_loadA,
+  output => s_regAout
+);
+
+-- Registrador D:
+
+regD: Register16 port map (
+  clock => clock,
+  input => s_ALUout,
+  load => c_loadD,
+  output => s_regDout
+);
+
+-- Mux AM/D:
+
+muxAM:  Mux16 port map(
+  a=> s_regAout,
+  b=> inM,
+  sel=> c_muxAM,
+  q=> s_muxAM_out
+);
+
+-- ULA:
+-- Comentado para testar conceito B:
+-- opULA: ALU port map(
+--   x=> s_regDout,
+--   y=> s_muxAM_out,
+--   zx=> c_zx, nx=> c_nx, zy=> c_zy, ny=> c_ny, f=> c_f, no=> c_no,
+--   zr=> c_zr,
+--   ng=> c_ng,
+--   saida=> s_ALUout
+-- );
+
+-- PC:
+
+jPC: pc port map(
+  clock=> clock,
+  increment=> '1',
+  load=> c_loadPC,
+  reset=> reset,
+  input=> s_regAout,
+  output => s_pcout
+);
+
+-- Conceito B --
+
+-- RegistradorS:
+regS: Register16 port map (
+  clock => clock,
+  input => s_ALUout,
+  load => c_loadS,
+  output => s_regSout
+);
+--MuxS:
+muxS:  Mux16 port map(
+  a=> s_regDout,
+  b=> s_regSout,
+  sel=> c_muxS,
+  q=> s_regSout
+);
+
+--ULAB:
+opULAB: ALU port map(
+  x=> s_regSout,
+  y=> s_muxAM_out,
+  zx=> c_zx, nx=> c_nx, zy=> c_zy, ny=> c_ny, f=> c_f, no=> c_no,
+  zr=> c_zr,
+  ng=> c_ng,
+  saida=> s_ALUout
+);
+
+-- Conceito B ---
+
+-- Atribuindo saídas da CPU faltantes:
+
+addressM<= s_regAout(14 downto 0);
+pcout<= s_pcout(14 downto 0);
+outM<= s_ALUout;
 
 end architecture;
