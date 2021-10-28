@@ -56,30 +56,30 @@ end component;
 begin
 
 
-u1: sevenSeg port map(
-		bcd => bcd_0,  
-		leds => HEX0  
-	);
+-- u1: sevenSeg port map(
+-- 		bcd => bcd_0,  
+-- 		leds => HEX0  
+-- 	);
 	
-u2: sevenSeg port map(
-		bcd => bcd_1,  
-		leds => HEX1  
-	);
+-- u2: sevenSeg port map(
+-- 		bcd => bcd_1,  
+-- 		leds => HEX1  
+-- 	);
 	
-u3: sevenSeg port map(
-		bcd => bcd_2,  
-		leds => HEX2  
-	);
+-- u3: sevenSeg port map(
+-- 		bcd => bcd_2,  
+-- 		leds => HEX2  
+-- 	);
 
-bintobcd: binarioToBcd generic map(N => 10) port map(
-		clk => CLOCK_50, 
-		reset=> '0',
-		binary_in => SW,
-		bcd0 => bcd_0,
-		bcd1 => bcd_1,
-		bcd2 => bcd_2,
-		bcd3 => open,
-		bcd4 => open
-	);
+-- bintobcd: binarioToBcd generic map(N => 10) port map(
+-- 		clk => CLOCK_50, 
+-- 		reset=> '0',
+-- 		binary_in => SW,
+-- 		bcd0 => bcd_0,
+-- 		bcd1 => bcd_1,
+-- 		bcd2 => bcd_2,
+-- 		bcd3 => open,
+-- 		bcd4 => open
+-- 	);
 
 end rtl;

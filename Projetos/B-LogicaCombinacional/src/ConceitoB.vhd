@@ -45,25 +45,25 @@ end component;
 ---------------
 begin
 
-	seven2 : sevenSeg
-	port map 
-	(
-			bcd => SW(3 downto 0),
-			leds => HEX0
-	);
+	-- seven2 : sevenSeg
+	-- port map 
+	-- (
+	-- 		bcd => SW(3 downto 0),
+	-- 		leds => HEX0
+	-- );
 
-	seven1 : sevenSeg
-	port map 
-	(
-			bcd => SW(7 downto 4),
-			leds => HEX1
-	);
+	-- seven1 : sevenSeg
+	-- port map 
+	-- (
+	-- 		bcd => SW(7 downto 4),
+	-- 		leds => HEX1
+	-- );
 
-	seven0 : sevenSeg
-	port map 
-	(
-			bcd => "00" & SW(9 downto 8),
-			leds => HEX2
-	);
+	-- seven0 : sevenSeg
+	-- port map 
+	-- (
+	-- 		bcd => "00" & SW(9 downto 8),
+	-- 		leds => HEX2
+	-- );
 
 end rtl;
