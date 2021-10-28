@@ -53,9 +53,30 @@ ARCHITECTURE logic OF MemoryIO IS
           LCD_D        : INOUT STD_LOGIC_VECTOR(15 downto 0);
           LCD_RD_N     : OUT   STD_LOGIC;
           LCD_RESET_N  : OUT   STD_LOGIC;
-          LCD_RS       : OUT   STD_LOGIC;	-- (DCx) 0 : reg, 1: command
-          LCD_WR_N     : OUT   STD_LOGIC
-          );
+          LCD_RS       : OUT   STD_LOGIC;	-- (----------------------------------------
+          -- Controla LOAD do display e da ram e LED ! --
+          ----------------------------------------
+          LOAD_DISPLAY <= LOAD when ADDRESS >= "100000000000000" and ADDRESS <= "101001010111111" else 
+                          '0';
+          LOAD_RAM <= LOAD when ADDRESS <= "011111111111111" else '0';
+          LOAD_LED <= LOAD when ADDRESS <= "101001011000000" else '0';
+      
+          ----------------------------------------
+          -- SW e LED                           --
+          ----------------------------------------
+          -- Compatibilidade de tamanho
+          LED <= LED16(9 downto 0);
+      
+          -- Compatibilidade de tamanho
+          SW16(15 downto 10) <= (others => '0');
+          SW16( 9 DOWNTO  0) <= SW;
+      
+          ----------------------------------------
+          -- SAIDA do memory I/O                --
+          ----------------------------------------
+          -- precisar ser: RAM ou SW16
+          OUTPUT <= SW16  when (ADDRESS = "101001011000001") else
+                    OUTPUT_RAM;
   end component;
 
   component RAM16K IS
@@ -135,9 +156,10 @@ BEGIN
     ----------------------------------------
     -- Controla LOAD do display e da ram e LED ! --
     ----------------------------------------
-    --LOAD_DISPLAY <= ??????; 
-    --LOAD_RAM     <= ??????; 
-    --LOAD_LED     <= ??????; 
+    LOAD_DISPLAY <= LOAD when ADDRESS >= "100000000000000" and ADDRESS <= "101001010111111" else 
+                    '0';
+    LOAD_RAM <= LOAD when ADDRESS <= "011111111111111" else '0';
+    LOAD_LED <= LOAD when ADDRESS <= "101001011000000" else '0';
 
     ----------------------------------------
     -- SW e LED                           --
@@ -153,7 +175,8 @@ BEGIN
     -- SAIDA do memory I/O                --
     ----------------------------------------
     -- precisar ser: RAM ou SW16
-    -- OUTPUT <= ?????? ;
+    OUTPUT <= SW16  when (ADDRESS = "101001011000001") else
+              OUTPUT_RAM;
 
 
 END logic;
