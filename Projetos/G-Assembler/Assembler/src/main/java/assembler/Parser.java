@@ -5,6 +5,7 @@
 
 package assembler;
 
+import javax.swing.plaf.synth.SynthTextAreaUI;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -89,7 +90,31 @@ public class Parser {
      */
     public CommandType commandType(String command) {
         /* TODO: implementar */
-    	return null;
+
+        String[] comando = command.split("\\s");
+
+
+        if(comando[0].equals("leaw")){
+
+            return CommandType.A_COMMAND;
+
+        } else if (comando[0].equals("movw") || comando[0].equals("addw")
+                || comando[0].equals("subw") || comando[0].equals("rsubw")
+                || comando[0].equals("incw") || comando[0].equals("decw")
+                || comando[0].equals("notw") || comando[0].equals("negw")
+                || comando[0].equals("andw") || comando[0].equals("orw")
+                || comando[0].equals("jmp") || comando[0].equals("je")
+                || comando[0].equals("jne") || comando[0].equals("jg")
+                || comando[0].equals("jge") || comando[0].equals("jl")
+                || comando[0].equals("jle") || comando[0].equals("nop")) {
+
+            return CommandType.C_COMMAND;
+
+        }
+        else {
+            return CommandType.L_COMMAND;
+        }
+
     }
 
     /**
@@ -100,6 +125,18 @@ public class Parser {
      */
     public String symbol(String command) {
         /* TODO: implementar */
+
+        if(commandType(command) == CommandType.A_COMMAND){
+
+            // Retirando puntuação / carcateres inúteis
+            String comando = command.replaceAll(",", " ").replaceAll("\\$", "");
+
+            // Separando por espaço:
+            String [] instrucao = comando.split("\\s");
+            return instrucao[1];
+
+        }
+
     	return null;
     }
 
@@ -111,6 +148,13 @@ public class Parser {
      */
     public String label(String command) {
         /* TODO: implementar */
+
+        if(commandType(command) == CommandType.L_COMMAND){
+
+            String comando = command.replaceAll(":", "");
+            return comando;
+        }
+
     	return null;
     }
 
@@ -122,8 +166,10 @@ public class Parser {
      */
     public String[] instruction(String command) {
         /* TODO: implementar */
-    	return null;
-    }
 
+        String [] instruction =  command.replaceAll(",", " ").split("\\s");
+        return instruction;
+
+    }
 
 }
