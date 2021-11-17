@@ -20,6 +20,9 @@ public class Assemble {
     boolean debug;                         // flag que especifica se mensagens de debug são impressas
     private SymbolTable table;             // tabela de símbolos (variáveis e marcadores)
 
+    private boolean temSalto;
+    private Integer contador ;
+
     /*
      * inicializa assembler
      * @param inFile
@@ -34,6 +37,9 @@ public class Assemble {
         outHACK    = new PrintWriter(new FileWriter(hackFile));  // Cria saída do print para
         // o arquivo hackfile
         table      = new SymbolTable();                          // Cria e inicializa a tabela de simbolos
+
+        temSalto = false;  //Verifica a existência de um jump
+        contador = 0;    //Verifica se a linha analisada é a "seguinte de um jump"
     }
 
     /**
@@ -120,6 +126,12 @@ public class Assemble {
                 /* TODO: implementar */
                 case C_COMMAND:
                     instruction = "10" + Code.comp(comando) + Code.dest(comando) + Code.jump(comando);
+
+                    if (Code.jump(comando) != "000"){                  // jump
+                        temSalto = true;                               // Atualiza variável temSalto (Verifica a exitencia de salto no código).
+                        System.out.println("Tem salto");
+                    }
+
                     break;
                 case A_COMMAND:
                     try {
@@ -133,6 +145,21 @@ public class Assemble {
             }
             // Escreve no arquivo .hack a instrução
             if(outHACK!=null) {
+
+                if(temSalto   && parser.command().contains("nop")){   // Caso a linha seguinte não tenha Nop e a linha anterior tenha jump , escrever nop
+                    if(contador == 0){
+                        contador = 1;                                 // Condição para a linha seguinte ao jump
+                    }else {
+                        outHACK.println("100000011000000000");        // Nosso código está construido para interpretar essa instrução como um nop.
+                        System.out.println("Acrescentando nop!");
+
+                        temSalto = false;                            // atualizando variáveis depois de escrever um nop
+                        contador=0;
+                    }
+                } else{
+                    temSalto = false;                                // atualizando variável caso já haja um nop
+                }
+
                 outHACK.println(instruction);
             }
             instruction = null;
