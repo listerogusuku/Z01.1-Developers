@@ -1,1 +1,29 @@
 function pow 3
+
+push constant 1
+push local 1
+add
+pop local 1
+
+label start
+push argument 1 
+push constant 0
+eq
+if-goto end
+
+push local 1 
+push argument 0 
+call mult 2 
+pop local 1
+
+push argument 1 
+push constant 1
+sub 
+pop argument 1
+
+goto start
+
+label end
+push local 1
+
+return 

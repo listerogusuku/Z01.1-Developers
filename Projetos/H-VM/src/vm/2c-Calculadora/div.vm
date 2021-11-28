@@ -1,1 +1,26 @@
 function div 2
+
+label start
+push argument 0
+push argument 1
+lt 
+if-goto end 
+
+push argument 0
+push argument 1
+sub 
+pop argument 0
+
+push local 0
+push constant 1 
+add 
+pop local 0 
+goto start
+   
+label end
+push local 0
+return
+
+
+
+
