@@ -388,6 +388,10 @@ public class Code {
         List<String> commands = new ArrayList<String>();
         commands.add( "; Label (marcador)" );
 
+        commands.add(label + ":");
+        String[] stringArray = new String[commands.size()];
+        commands.toArray(stringArray);
+        write(stringArray);
     }
 
     /**
@@ -412,7 +416,22 @@ public class Code {
         List<String> commands = new ArrayList<String>();
         commands.add(String.format("; %d - Goto Condicional", lineCode++));
 
-     }
+        commands.add("leaw $SP, %A");
+        commands.add("movw (%A), %D");                       //D= RAM[0]
+        commands.add("decw %D");                             //SP-1       Apontando para o true ou false
+        commands.add("movw %D, (%A)") ;                      // Atualizando SP = SP(original) - 1
+        commands.add("movw %D, %A");                         // A = SP-1
+        commands.add("movw (%A), %D");                       // D = RAM[SP-1]
+        commands.add("notw %D");                             // Caso seja 0xFFF = 000 e comparar com je
+        commands.add("leaw $"+label+", %A");                 // Caso true, pular para o label indicado.
+        commands.add("je %D");
+        commands.add("nop");
+
+        String[] stringArray = new String[ commands.size() ];
+        commands.toArray( stringArray );
+        write(stringArray);
+
+    }
 
     /**
      * Grava no arquivo de saida as instruções em Assembly para uma chamada de função (Call).
