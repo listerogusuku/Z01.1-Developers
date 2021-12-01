@@ -93,7 +93,7 @@ if __name__ == "__main__":
 
     # gera jar
     f = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'Assembler/')
-    genJAR(f)
+    genJAR()
 
     # testa
     assembler = f + 'Z01-Assembler.jar'
