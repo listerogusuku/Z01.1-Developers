@@ -400,6 +400,12 @@ public class Code {
         List<String> commands = new ArrayList<String>();
         commands.add(String.format("; %d - Goto Incondicional", lineCode++));
 
+        commands.add("leaw $"+ label + ",%A");
+        commands.add("jmp");
+        commands.add("nop");
+        String[] stringArray = new String[commands.size()];
+        commands.toArray(stringArray);
+        write(stringArray);
     }
 
     /**
