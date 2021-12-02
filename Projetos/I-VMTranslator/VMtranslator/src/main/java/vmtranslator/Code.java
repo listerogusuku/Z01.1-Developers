@@ -52,33 +52,239 @@ public class Code {
             commands.add("decw %A");
             commands.add("addw (%A), %D, %D");
             commands.add("movw %D, (%A)");
-            //commands.add("addw $1, %A, %D");
-            //commands.add("leaw $0, %A");
-            //commands.add("movw %D, (%A)");
+            commands.add("addw $1, %A, %D");
+            commands.add("leaw $0, %A");
+            commands.add("movw %D, (%A)");
 
         } else if (command.equals("sub")) {
             commands.add(String.format("; %d - SUB", lineCode++));
             // IMPLEMENTAR AQUI O LAB
             // LEMBRAR DE USAR A FUNÇÃO commands.add()!
+
+            commands.add("leaw $SP, %A");
+            commands.add("movw (%A), %A");         //A = Onde SP aponta
+            commands.add("decw %A");
+            commands.add("movw (%A), %D");         // D = número no topo da pilha
+            commands.add("decw %A");
+            commands.add("subw (%A), %D, %D");     // D = segundo da pilha - primeiro da pilha
+            commands.add("movw %D, (%A)");         // RAM[segundo da pilha] = D
+
+            //Atualizando SP:
+            commands.add("leaw $SP, %A");
+            commands.add("movw (%A), %D");
+            commands.add("decw %D");             // A próxima posição vazia é 1 a menos do SP inicial.
+            commands.add("movw %D, (%A)");
+
         } else if (command.equals("neg")) {
             commands.add(String.format("; %d - NEG", lineCode++));
+
+            commands.add("leaw $SP, %A");
+            commands.add("movw (%A), %A");         //A = Onde SP aponta
+            commands.add("decw %A");
+            commands.add("movw (%A), %D");         //D = número no topo da pilha
+            commands.add("negw %D");               // -D
+            commands.add("movw %D, (%A)");         // RAM[mesmo lugar que D o numero estava] = -D
+
+            // Não mexemos na posição do stack pointer!
 
         } else if (command.equals("eq")) {
             commands.add(String.format("; %d - EQ", lineCode++));
 
+            // Verificando se os dois valor do topo da pilha são iguais
+
+            commands.add("leaw $SP, %A");
+            commands.add("movw (%A), %A");         //A = Onde SP aponta
+            commands.add("decw %A");
+            commands.add("movw (%A), %D");         // D = número no topo da pilha
+            commands.add("decw %A");
+            commands.add("subw (%A), %D, %D");     // D = segundo da pilha - primeiro da pilha
+
+            // Verificando se a subtração de dois números é zero, se for, eles sao iguais
+            commands.add("leaw $IGUAL, %A");
+            commands.add("je %D");
+            commands.add("nop");
+
+            // caso false:
+            commands.add("leaw $SP, %A");
+            commands.add("movw (%A), %D");   // A = local apontado pelo SP
+            commands.add("decw %D");         // SP-1
+            commands.add("decw %D");         // SP-2  -> Local onde será posto o false.
+            commands.add("movw %D, %A");
+            commands.add("movw $0, (%A)");   // RAM[SP-2] = 0x000 (False)
+
+                //atualizando SP
+            commands.add("incw %D");
+            commands.add("leaw $SP, %A");
+            commands.add("movw %D, (%A)");  // Setando SP = SP(original) - 1
+               // enviando para o fim:
+            commands.add("leaw $END, %A");
+            commands.add("jmp");
+            commands.add("nop");
+
+            // caso true (valores iguais):
+            commands.add("IGUAL:");
+            commands.add("leaw $SP, %A");
+            commands.add("movw (%A), %D");   // A = local apontado pelo SP
+            commands.add("decw %D");         // SP-1
+            commands.add("decw %D");         // SP-2  -> Local onde será posto o false.
+            commands.add("movw %D, %A");
+
+            commands.add("movw $-1, (%A)");  // RAM[SP-2] = 0xFFF (true)
+
+            //atualizando SP
+            commands.add("incw %D");
+            commands.add("leaw $SP, %A");
+            commands.add("movw %D, (%A)");  // Setando SP = SP(original) - 1
+
+            // FIM:
+            commands.add("END:");
+
         } else if (command.equals("gt")) {
             commands.add(String.format("; %d - GT", lineCode++));
+
+            // Verificando se os dois valor do topo da pilha são iguais
+
+            commands.add("leaw $SP, %A");
+            commands.add("movw (%A), %A");         //A = Onde SP aponta
+            commands.add("decw %A");
+            commands.add("movw (%A), %D");         // D = número no topo da pilha
+            commands.add("decw %A");
+            commands.add("subw (%A), %D, %D");     // D = segundo da pilha - primeiro da pilha
+
+            // Verificando se a subtração de dois números é maior que zero, se for, ó penúltimo é maior que o primeiro
+            commands.add("leaw $MAIOR, %A");
+            commands.add("jg %D");
+            commands.add("nop");
+
+            // caso false:
+            commands.add("leaw $SP, %A");
+            commands.add("movw (%A), %D");   // A = local apontado pelo SP
+            commands.add("decw %D");         // SP-1
+            commands.add("decw %D");         // SP-2  -> Local onde será posto o false.
+            commands.add("movw %D, %A");
+            commands.add("movw $0, (%A)");   // RAM[SP-2] = 0x000 (False)
+
+            //atualizando SP
+            commands.add("incw %D");
+            commands.add("leaw $SP, %A");
+            commands.add("movw %D, (%A)");  // Setando SP = SP(original) - 1
+            // enviando para o fim:
+            commands.add("leaw $END, %A");
+            commands.add("jmp");
+            commands.add("nop");
+
+            // caso true (valores iguais):
+            commands.add("MAIOR:");
+            commands.add("leaw $SP, %A");
+            commands.add("movw (%A), %D");   // A = local apontado pelo SP
+            commands.add("decw %D");         // SP-1
+            commands.add("decw %D");         // SP-2  -> Local onde será posto o false.
+            commands.add("movw %D, %A");
+
+            commands.add("movw $-1, (%A)");  // RAM[SP-2] = 0xFFF (true)
+
+            //atualizando SP
+            commands.add("incw %D");
+            commands.add("leaw $SP, %A");
+            commands.add("movw %D, (%A)");  // Setando SP = SP(original) - 1
+
+            // FIM:
+            commands.add("END:");
 
         } else if (command.equals("lt")) {
             commands.add(String.format("; %d - LT", lineCode++));
 
+            // Verificando se o valor no topo da pilha é menor que o penúltimo na pilha
+
+            commands.add("leaw $SP, %A");
+            commands.add("movw (%A), %A");         //A = Onde SP aponta
+            commands.add("decw %A");
+            commands.add("movw (%A), %D");         // D = número no topo da pilha
+            commands.add("decw %A");
+            commands.add("subw (%A), %D, %D");     // D = segundo da pilha - primeiro da pilha
+
+            // Verificando se a subtração de dois números é menor que zero, se for, ó penúltimo é menor que o primeiro
+            commands.add("leaw $MENOR, %A");
+            commands.add("jl %D");
+            commands.add("nop");
+
+            // caso false:
+            commands.add("leaw $SP, %A");
+            commands.add("movw (%A), %D");   // A = local apontado pelo SP
+            commands.add("decw %D");         // SP-1
+            commands.add("decw %D");         // SP-2  -> Local onde será posto o false.
+            commands.add("movw %D, %A");
+            commands.add("movw $0, (%A)");   // RAM[SP-2] = 0x000 (False)
+
+            //atualizando SP
+            commands.add("incw %D");
+            commands.add("leaw $SP, %A");
+            commands.add("movw %D, (%A)");  // Setando SP = SP(original) - 1
+            // enviando para o fim:
+            commands.add("leaw $END, %A");
+            commands.add("jmp");
+            commands.add("nop");
+
+            // caso true (valores iguais):
+            commands.add("MENOR:");
+            commands.add("leaw $SP, %A");
+            commands.add("movw (%A), %D");   // A = local apontado pelo SP
+            commands.add("decw %D");         // SP-1
+            commands.add("decw %D");         // SP-2  -> Local onde será posto o false.
+            commands.add("movw %D, %A");
+
+            commands.add("movw $-1, (%A)");  // RAM[SP-2] = 0xFFF (true)
+
+            //Atualizando SP
+            commands.add("incw %D");
+            commands.add("leaw $SP, %A");
+            commands.add("movw %D, (%A)");  // Setando SP = SP(original) - 1
+
+            // FIM:
+            commands.add("END:");
+
         } else if (command.equals("and")) {
             commands.add(String.format("; %d - AND", lineCode++));
+
+            commands.add("leaw $SP, %A");
+            commands.add("movw (%A), %A");         //A = Onde SP aponta
+            commands.add("decw %A");
+            commands.add("movw (%A), %D");         // D = número no topo da pilha
+            commands.add("decw %A");
+            commands.add("andw (%A), %D, %D");     // D = (segundo da pilha & primeiro da pilha)
+            commands.add("movw %D, (%A)");         // RAM[segundo da pilha] = D
+
+            // Atualizando SP
+            commands.add("incw %A");
+            commands.add("movw %A, %D");
+            commands.add("leaw $SP, %A");
+            commands.add("movw %D, (%A)");
 
         } else if (command.equals("or")) {
             commands.add(String.format("; %d - OR", lineCode++));
 
+            commands.add("leaw $SP, %A");
+            commands.add("movw (%A), %A");         //A = Onde SP aponta
+            commands.add("decw %A");
+            commands.add("movw (%A), %D");         // D = número no topo da pilha
+            commands.add("decw %A");
+            commands.add("orw (%A), %D, %D");     // D = (segundo da pilha & primeiro da pilha)
+            commands.add("movw %D, (%A)");         // RAM[segundo da pilha] = D
+
+            // Atualizando SP
+            commands.add("incw %A");
+            commands.add("movw %A, %D");
+            commands.add("leaw $SP, %A");
+            commands.add("movw %D, (%A)");
+
         } else if (command.equals("not")) {
+
+            commands.add("leaw $SP, %A");
+            commands.add("movw (%A), %A");         //A = Onde SP aponta
+            commands.add("decw %A");
+            commands.add("movw (%A), %D");         // D = número no topo da pilha
+            commands.add("not %D");                // not(D)
+            commands.add("movw %D, (%A)");         // RAM[segundo da pilha] = D
 
         }
 
@@ -94,7 +300,7 @@ public class Code {
      * @param  segment segmento de memória a ser usado pelo comando.
      * @param  index índice do segkento de memória a ser usado pelo comando.
      */
-    public void writePushPop(Parser.CommandType command, String segment, Integer index) {
+   public void writePushPop(Parser.CommandType command, String segment, Integer index) {
 
         if ( command.equals("")) {
             Error.error("Instrução invalida");
